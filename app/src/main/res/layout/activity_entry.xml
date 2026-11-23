@@ -1,0 +1,22 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/editor_scroll"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:background="#F5F6F1">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/form" android:orientation="vertical" android:padding="20dp"
+        android:focusable="true" android:focusableInTouchMode="true">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/heading" android:textSize="28sp" android:textColor="#1B392C" android:textStyle="bold"/>
+        <RadioGroup android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/type" android:orientation="horizontal" android:checkedButton="@id/expense">
+            <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/expense" android:text="支出"/>
+            <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/income" android:text="收入"/>
+        </RadioGroup>
+        <TextView style="@style/Label" android:text="金额（元）"/>
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/amount" android:hint="0.00" android:inputType="numberDecimal" android:textSize="26sp" android:singleLine="true"/>
+        <TextView style="@style/Label" android:text="分类"/>
+        <Spinner android:layout_width="match_parent" android:layout_height="48dp" android:id="@+id/category" android:spinnerMode="dropdown"/>
+        <TextView style="@style/Label" android:text="记账日期"/>
+        <Button android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/day"/>
+        <TextView style="@style/Label" android:text="备注"/>
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/note" android:hint="选填，例如食堂午餐" android:inputType="text" android:singleLine="true" />
+        <Button android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/save" android:layout_marginTop="12dp" android:text="保存账单" android:backgroundTint="#246552" android:textColor="#FFFFFF"/>
+        <Button android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/delete" android:text="删除账单" android:textColor="#914531" android:visibility="gone"/>
+        <Button android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/cancel" android:text="取消"/>
+    </LinearLayout>
+</ScrollView>

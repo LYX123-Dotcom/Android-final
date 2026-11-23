@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="#F5F6F1">
+    <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:padding="20dp">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="校园账本" android:textSize="32sp" android:textColor="#1B392C" android:textStyle="bold"/>
+        <TextView android:id="@+id/count" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="6dp" android:textColor="#51665B" android:textSize="15sp"/>
+    </LinearLayout>
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+        android:paddingStart="16dp" android:paddingEnd="16dp">
+        <ListView android:id="@+id/list" android:layout_width="match_parent" android:layout_height="match_parent"
+            android:divider="@android:color/transparent" android:dividerHeight="6dp"/>
+        <TextView android:id="@+id/empty" android:gravity="center" android:layout_gravity="center"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="还没有账单\n记下第一笔收入或支出" android:lineSpacingExtra="6dp"
+            android:textColor="#52665D" android:textSize="17sp"/>
+    </FrameLayout>
+    <Button android:id="@+id/add" android:layout_width="match_parent" android:layout_height="54dp"
+        android:layout_margin="16dp" android:text="记一笔" android:textSize="17sp" android:textColor="#FFFFFF"
+        android:backgroundTint="#246552"/>
+</LinearLayout>
