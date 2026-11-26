@@ -1,4 +1,8 @@
-plugins { id("com.android.application") }
+plugins {
+    id("com.android.application")
+    id("com.google.devtools.ksp")
+}
+
 android {
     namespace = "cn.campus.ledger"
     compileSdk { version = release(37) }
@@ -14,7 +18,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 }
+
 dependencies {
-    implementation("androidx.room:room-runtime:2.6.1")
-    annotationProcessor("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.fragment:fragment:1.3.6")
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
+    implementation("androidx.room:room-runtime:2.8.5")
+    ksp("androidx.room:room-compiler:2.8.5")
 }
