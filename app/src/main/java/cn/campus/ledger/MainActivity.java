@@ -15,6 +15,7 @@ import cn.campus.ledger.data.*;
 import cn.campus.ledger.entry.EntryActivity;
 
 public class MainActivity extends Activity {
+    private static final String STATE_MONTH = "state_month";
     private final List<Bill> records = new ArrayList<>();
     private BaseAdapter adapter;
     private TextView count, monthLabel, incomeTotal, expenseTotal, balanceTotal;
@@ -23,6 +24,9 @@ public class MainActivity extends Activity {
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
+        if (state != null && state.getString(STATE_MONTH) != null) {
+            month = LocalDate.parse(state.getString(STATE_MONTH));
+        }
         setContentView(R.layout.activity_main);
         Ui.insets(findViewById(R.id.root));
         dao = LedgerDb.get(this);
@@ -48,6 +52,11 @@ public class MainActivity extends Activity {
         load();
     }
 
+    @Override public void onSaveInstanceState(Bundle out) {
+        super.onSaveInstanceState(out);
+        out.putString(STATE_MONTH, month.toString());
+    }
+
     private void switchMonth(int delta) {
         month = month.plusMonths(delta);
         load();
@@ -56,9 +65,12 @@ public class MainActivity extends Activity {
     private void load() {
         final String start = month.toString();
         final String end = month.plusMonths(1).toString();
+        final LocalDate loading = month;
         monthLabel.setText(month.getYear() + "年" + month.getMonthValue() + "月");
         LedgerDb.run(() -> dao.month(start, end), rows -> {
             if (isFinishing() || isDestroyed()) return;
+            // 连续切换月份时，丢弃已过期月份的查询结果。
+            if (!loading.equals(month)) return;
             long income = 0, expense = 0;
             for (Bill bill : rows) {
                 if (bill.income) income += bill.cents;
@@ -85,10 +97,20 @@ public class MainActivity extends Activity {
             BillRow row = recycled == null ? new BillRow() : (BillRow) recycled;
             Bill bill = getItem(position);
             row.category.setText(bill.category);
-            row.details.setText(bill.note.isEmpty() ? bill.day : bill.day + "  ·  " + bill.note);
+            String day = friendlyDay(bill.day);
+            row.details.setText(bill.note.isEmpty() ? day : day + "  ·  " + bill.note);
             row.amount.setText((bill.income ? "+¥" : "−¥") + Money.format(bill.cents));
             return row;
         }
+    }
+
+    private static String friendlyDay(String iso) {
+        LocalDate date = LocalDate.parse(iso);
+        LocalDate today = LocalDate.now();
+        if (date.equals(today)) return "今天";
+        if (date.equals(today.minusDays(1))) return "昨天";
+        String monthDay = date.getMonthValue() + "月" + date.getDayOfMonth() + "日";
+        return date.getYear() == today.getYear() ? monthDay : date.getYear() + "年" + monthDay;
     }
 
     private class BillRow extends LinearLayout {
@@ -98,7 +120,7 @@ public class MainActivity extends Activity {
             setGravity(Gravity.CENTER_VERTICAL);
             int pad = Ui.dp(getContext(), 14);
             setPadding(pad, pad, pad, pad);
-            setBackground(Ui.background(getContext(), "#FFFFFF", 14));
+            setBackground(Ui.ripple(getContext(), "#FFFFFF", 14));
             LinearLayout stack = new LinearLayout(getContext());
             stack.setOrientation(VERTICAL);
             category = Ui.text(getContext(), 17, "#20382B", true);

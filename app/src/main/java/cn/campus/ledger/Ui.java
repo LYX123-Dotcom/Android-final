@@ -1,9 +1,12 @@
 package cn.campus.ledger;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.RippleDrawable;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.TextView;
@@ -20,6 +23,11 @@ public final class Ui {
         shape.setColor(Color.parseColor(color));
         shape.setCornerRadius(dp(context, radius));
         return shape;
+    }
+
+    public static Drawable ripple(Context context, String color, int radius) {
+        return new RippleDrawable(ColorStateList.valueOf(Color.parseColor("#33246552")),
+                background(context, color, radius), background(context, color, radius));
     }
 
     public static TextView text(Context context, int size, String color, boolean bold) {
