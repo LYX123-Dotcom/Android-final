@@ -1,72 +1,84 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root" android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:background="#F5F6F1">
-    <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:padding="20dp">
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="校园账本" android:textSize="32sp" android:textColor="#1B392C" android:textStyle="bold"/>
-        <TextView android:id="@+id/count" android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_marginTop="6dp" android:textColor="#51665B" android:textSize="15sp"/>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F6F1"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingStart="18dp"
+        android:paddingEnd="6dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp">
+        <TextView
+            android:id="@+id/page_title"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="23sp"
+            android:textColor="#193B2D" />
+        <TextView
+            android:id="@+id/previous"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="‹"
+            android:textSize="27sp"
+            android:textColor="#285B4C"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="上个月"
+            android:focusable="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/month"
+            android:text=""
+            android:textSize="15sp"
+            android:textColor="#285B4C"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/next"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="›"
+            android:textSize="27sp"
+            android:textColor="#285B4C"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="下个月"
+            android:focusable="true" />
     </LinearLayout>
-    <LinearLayout android:id="@+id/summary" android:orientation="vertical"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
-        android:paddingStart="14dp" android:paddingEnd="14dp"
-        android:paddingTop="10dp" android:paddingBottom="14dp">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:gravity="center_vertical">
-            <TextView android:id="@+id/prev_month" android:layout_width="40dp" android:layout_height="40dp"
-                android:gravity="center" android:text="‹" android:textSize="26sp" android:textColor="#246552"/>
-            <TextView android:id="@+id/month" android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:gravity="center" android:textSize="16sp"
-                android:textStyle="bold" android:textColor="#1B392C"/>
-            <TextView android:id="@+id/next_month" android:layout_width="40dp" android:layout_height="40dp"
-                android:gravity="center" android:text="›" android:textSize="26sp" android:textColor="#246552"/>
-        </LinearLayout>
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="4dp" android:orientation="horizontal">
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:orientation="vertical" android:gravity="center">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="收入" android:textSize="12sp" android:textColor="#6B7C73"/>
-                <TextView android:id="@+id/income_total" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:layout_marginTop="2dp" android:gravity="center"
-                    android:maxLines="1" android:textSize="16sp" android:textStyle="bold" android:textColor="#205943"
-                    android:autoSizeTextType="uniform" android:autoSizeMinTextSize="10sp"
-                    android:autoSizeMaxTextSize="16sp" android:autoSizeStepGranularity="1sp"/>
-            </LinearLayout>
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:orientation="vertical" android:gravity="center">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="支出" android:textSize="12sp" android:textColor="#6B7C73"/>
-                <TextView android:id="@+id/expense_total" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:layout_marginTop="2dp" android:gravity="center"
-                    android:maxLines="1" android:textSize="16sp" android:textStyle="bold" android:textColor="#A8452F"
-                    android:autoSizeTextType="uniform" android:autoSizeMinTextSize="10sp"
-                    android:autoSizeMaxTextSize="16sp" android:autoSizeStepGranularity="1sp"/>
-            </LinearLayout>
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:orientation="vertical" android:gravity="center">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="结余" android:textSize="12sp" android:textColor="#6B7C73"/>
-                <TextView android:id="@+id/balance_total" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:layout_marginTop="2dp" android:gravity="center"
-                    android:maxLines="1" android:textSize="16sp" android:textStyle="bold" android:textColor="#1B392C"
-                    android:autoSizeTextType="uniform" android:autoSizeMinTextSize="10sp"
-                    android:autoSizeMaxTextSize="16sp" android:autoSizeStepGranularity="1sp"/>
-            </LinearLayout>
-        </LinearLayout>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:background="#FFFFFF">
+        <TextView
+            android:id="@+id/nav_ledger"
+            style="@style/LedgerTab"
+            android:text="明细"
+            android:drawableTop="@drawable/ic_details" />
+        <TextView
+            android:id="@+id/nav_stats"
+            style="@style/LedgerTab"
+            android:text="统计"
+            android:drawableTop="@drawable/ic_stats" />
+        <TextView
+            android:id="@+id/nav_budget"
+            style="@style/LedgerTab"
+            android:text="预算"
+            android:drawableTop="@drawable/ic_budget" />
     </LinearLayout>
-    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
-        android:layout_marginTop="6dp" android:paddingStart="16dp" android:paddingEnd="16dp">
-        <ListView android:id="@+id/list" android:layout_width="match_parent" android:layout_height="match_parent"
-            android:divider="@android:color/transparent" android:dividerHeight="6dp"/>
-        <TextView android:id="@+id/empty" android:gravity="center" android:layout_gravity="center"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="这个月还没有账单\n记下第一笔收入或支出" android:lineSpacingExtra="6dp"
-            android:textColor="#52665D" android:textSize="17sp"/>
-    </FrameLayout>
-    <Button android:id="@+id/add" android:layout_width="match_parent" android:layout_height="54dp"
-        android:layout_margin="16dp" android:text="记一笔" android:textSize="17sp" android:textColor="#FFFFFF"
-        android:backgroundTint="#246552"/>
 </LinearLayout>

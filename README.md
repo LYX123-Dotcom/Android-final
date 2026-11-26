@@ -1,23 +1,71 @@
-# 校园账本 · 成员 A 的第一阶段
+# 校园账本 · 月度明细与分类统计
+
+当前工程包含成员 A 的记账表单与本地数据库，以及成员 B 的主页和分类统计。在 Android Studio 中打开包含 `settings.gradle.kts` 的工程目录，待 Gradle Sync 完成，选择 `app`，在 API 30 及以上的设备上运行。
+
+## 成员 B 的交付
+
+| 页面 | 可以完成的操作 |
+|---|---|
+| 明细 | 上下月切换、查看当月收入/支出/结余、按日期查看账单，打开原有表单新增或编辑。补记其他月份时默认选中该月 1 日，日期可修改。 |
+| 统计 | 查看当月支出分类排行。金额按从大到小排列，横条表示各类支出占当月总支出的比例。没有支出时提示“本月暂无支出”。 |
+| 预算入口 | 保留与明细、统计一致的所选月份，显示下一阶段的开发状态。成员 C 可将占位页面替换为正式预算页。 |
+
+首页和统计共用 `MainActivity.selectedMonth()`。成员 B 的页面、账单适配器及月汇总在 Kotlin 包 `cn.campus.ledger.overview`。两页调用成员 A 的 `LedgerDao.month(start, end)`，从月初查到下月月初之前。收支均按分累加，统计只汇总支出。编辑返回时页面重新读取数据库，连续切月时按最后一次选择显示结果。
+
+## 成员 B 提交到小组仓库
+
+以已合并成员 A 源码的小组主仓库为起点。在本机克隆小组仓库后，在其根目录打开 PowerShell。将本次交付的 `CampusLedger-member-B.patch` 保存到本地，在提示时输入它的完整路径。
+
+```powershell
+git status --short
+git switch main
+git pull --ff-only origin main
+git switch -c feature/monthly-overview
+$patchFile = (Read-Host "输入成员 B 补丁文件的完整路径").Trim('"')
+git apply --check "$patchFile"
+git apply --index "$patchFile"
+git diff --cached --stat
+.\gradlew.bat :app:assembleDebug
+```
+
+开始前确认工作区干净。补丁检查成功后再执行应用命令。如果远端已修改同一处代码且检查失败，可在 Android Studio 中对照完整 B 源码，将相应改动合并到本地功能分支，保留组员已有修改。项目 SDK、Gradle JDK 的设置见下方运行说明。
+
+验收完成后，用成员 B 自己的 GitHub 账号提交和推送。
+
+```powershell
+git commit -m "feat: 完成月度收支明细与分类统计"
+git push -u origin feature/monthly-overview
+```
+
+在 GitHub 创建 PR，选择目标分支 `main`、来源分支 `feature/monthly-overview`。标题可用“第二阶段：月度明细与分类统计”。正文填入关联 Issue 编号、实测金额及结果，邀请成员 A 或 C 审查。合并后，成员 C 从更新后的 main 开发预算页。
+
+## 成员 B 验收用例
+
+1. 选择没有账单的月份，验证明细和统计的空状态，记入 1,200 元生活费、15 元餐饮、45 元学习支出。首页应显示收入 1,200 元、支出 60 元、结余 1,140 元。
+2. 切到统计。学习应排第一，占 75%，餐饮占 25%。把餐饮改成 20 元，回到统计，总支出应为 65 元。
+3. 把学习支出移到上月。本月支出应为 20 元，上月增加 45 元。在统计、明细、预算入口之间切换，月份选择应一致。
+4. 删除剩余的餐饮支出，本月仍应保留生活费收入，统计页显示“本月暂无支出”。在成员 A 的安装上覆盖安装同一签名的 B 版本，原有账单应可按所属月份查看。
+
+## 第一阶段记录
 
 本阶段提供可以独立安装的 Android 应用。用户可以记录收支、修改金额与分类、补记其他日期、填写备注和删除账单。首页按日期倒序列出记录，点一行即可进入编辑。数据保存在手机本地。
 
 ## 在 Android Studio 运行
 
 1. 解压项目或克隆仓库后，用 **File → Open** 打开包含 `settings.gradle.kts` 的 CampusLedger 根目录。
-2. 等待 Gradle Sync 完成。如果 IDE 提示 SDK 缺失，在 SDK Manager 安装本工程指定的 Android SDK Platform 37。项目包含 Gradle Wrapper，守护进程使用 JDK 25，Java 源码级别为 17。
+2. 等待 Gradle Sync 完成。如果 IDE 提示 SDK 缺失，在 SDK Manager 安装本工程指定的 Android SDK Platform 37。项目包含 Gradle Wrapper，守护进程使用 JDK 17，Java 与 Kotlin 目标级别为 17。
 3. 在设备栏选择 Android 11（API 30）及以上的模拟器或手机，选择 **app** 并点 **Run ▶**。命令行构建可在 Windows 的工程根目录运行 `.\gradlew.bat :app:assembleDebug`。
 
 ## 成员 A 的交接接口
 
 | 位置 | 职责 |
 |---|---|
-| `entry/EntryActivity.java`、`res/layout/activity_entry.xml` | 收入与支出表单、输入校验、日期选择、保存及删除确认 |
-| `data/Bill.java` | 账单编号、类型、金额、日期、分类和备注 |
-| `data/LedgerDao.java`、`data/LedgerDb.java` | Room 数据库存储、按月查询和后台线程读写 |
-| `MainActivity.java`、`res/layout/activity_main.xml` | 本阶段验收入口和账单列表，后续由 B 接手 |
+| `entry/EntryActivity.kt`、`res/layout/activity_entry.xml` | 收入与支出表单、输入校验、日期选择、保存及删除确认 |
+| `data/Bill.kt` | 账单编号、类型、金额、日期、分类和备注 |
+| `data/LedgerDao.kt`、`data/LedgerDb.kt` | Room 数据库存储、按月查询和后台线程读写 |
+| `MainActivity.kt`、`res/layout/activity_main.xml` | 本阶段验收入口和账单列表，后续由 B 接手 |
 
-Java 文件均位于 `app/src/main/java/cn/campus/ledger/`。数据库名为 `campus-ledger.db`，第一版表名为 `bills`。金额字段 `cents` 始终保存正数，单位为分；`income` 表示收支方向。日期字段 `day` 使用 `yyyy-MM-dd`。B 可以调用 `month("2026-11-01", "2026-12-01")` 取得 11 月账单，起始日期包含在内，结束日期不包含在内。DAO 的同步方法应放入 `LedgerDb.run(...)` 的后台任务。编辑已有账单时，用 Intent 启动 `EntryActivity`，在 `EntryActivity.BILL_ID` 中传入 long 类型的账单编号。新增时无需传值。
+Kotlin 文件均位于 `app/src/main/java/cn/campus/ledger/`。数据库名为 `campus-ledger.db`，第一版表名为 `bills`。金额字段 `cents` 始终保存正数，单位为分；`income` 表示收支方向。日期字段 `day` 使用 `yyyy-MM-dd`。B 可以调用 `month("2026-11-01", "2026-12-01")` 取得 11 月账单，起始日期包含在内，结束日期不包含在内。DAO 的同步方法应放入 `LedgerDb.run(...)` 的后台任务。编辑已有账单时，用 Intent 启动 `EntryActivity`，在 `EntryActivity.BILL_ID` 中传入 long 类型的账单编号。新增时无需传值。
 
 ## 成员 A 如何首次上传到 GitHub
 
